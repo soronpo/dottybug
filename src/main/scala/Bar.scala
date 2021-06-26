@@ -3,22 +3,22 @@ import compiletime.ops.any.==
 trait Check22[
   Wide1,
   Wide2,
-  Cond[T1 <: Wide1, T2 <: Wide2] <: Boolean
+  Cond[T1 <: Wide1, T2 <: Wide2]
 ]:
   type Check[T1 <: Wide1, T2 <: Wide2] =
     Check22.Check[Cond[T1, T2]]
 
 object Check22:
   trait Check[
-    CondValue <: Boolean
+    CondValue 
   ]
   inline given [
-    CondValue <: Boolean
+    CondValue 
   ]: Check[CondValue] =
     ${ checkMacro[CondValue] }
 
   final def checkMacro[
-    CondValue <: Boolean
+    CondValue 
   ](using
     Quotes,
     Type[CondValue]
