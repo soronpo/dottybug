@@ -1,4 +1,4 @@
-import mylib.*
+import mylib.Main
 
 object Test:
   Main.fooCaller //works
