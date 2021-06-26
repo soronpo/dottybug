@@ -1,2 +1,2 @@
 object Foo:
-  val fails = summon[Bar[2] =:= "2"]
+  summon[DFBits2.TC[DFBits2[7], DFBits2[99]]]
