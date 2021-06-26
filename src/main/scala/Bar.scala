@@ -7,7 +7,7 @@ trait Check22[
   Cond[T1 <: Wide1, T2 <: Wide2]
 ]:
   type Check[T1 <: Wide1, T2 <: Wide2] =
-    Check22.Check[Cond[T1, T2]]
+    Check22.Check[Comp[T1, T2]]
 
 object Check22:
   trait Check[
@@ -16,21 +16,6 @@ object Check22:
   inline given [
     CondValue 
   ]: Check[CondValue] = new Check[CondValue]{}
-//    ${ checkMacro[CondValue] }
-
-  final def checkMacro[
-    CondValue 
-  ](using
-    Quotes,
-    Type[CondValue]
-  ): Expr[Check[CondValue]] =
-    import quotes.reflect.*
-    val condValue = TypeRepr.of[CondValue]
-    println(condValue)
-    '{
-    new Check[CondValue] {}
-    }
-  end checkMacro
 end Check22
 
 object Samurai
