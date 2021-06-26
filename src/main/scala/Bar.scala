@@ -21,3 +21,6 @@ object DFBits2:
       check: Samurai.Check[W, VW]
     ): TC[DFBits2[W], DFBits2[VW]] with
       type Out = Samurai.Check[W, VW]
+
+val x  = summon[DFBits2.TC[DFBits2[7], DFBits2[9]]]
+val works = summon[x.Out =:= Samurai.Check[7, 9]]
