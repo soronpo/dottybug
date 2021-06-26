@@ -1,2 +1,4 @@
 object Foo:
-  summon[DFBits2.TC[DFBits2[7], DFBits2[99]]]
+
+  val x  = summon[DFBits2.TC[DFBits2[7], DFBits2[9]]]
+  summon[x.Out =:= Samurai.Check[Int, 9]]

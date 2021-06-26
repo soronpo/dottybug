@@ -1,5 +1,6 @@
 import scala.quoted.*
-import compiletime.ops.any.==
+trait Comp[A, B]
+given [A, B] : Comp[A, B] = new Comp[A, B]{}
 trait Check22[
   Wide1,
   Wide2,
@@ -14,8 +15,8 @@ object Check22:
   ]
   inline given [
     CondValue 
-  ]: Check[CondValue] =
-    ${ checkMacro[CondValue] }
+  ]: Check[CondValue] = new Check[CondValue]{}
+//    ${ checkMacro[CondValue] }
 
   final def checkMacro[
     CondValue 
@@ -36,14 +37,16 @@ object Samurai
   extends Check22[
     Int,
     Int,
-    [W <: Int, VW <: Int] =>> W == VW,
+    [W <: Int, VW <: Int] =>> W Comp VW,
   ]
 
 trait DFType2
 opaque type DFBits2[W <: Int] <: DFType2 = DFType2
 object DFBits2:
-  trait TC[-T <: DFType2, V]
+  trait TC[-T <: DFType2, V] :
+    type Out
   object TC:
     given DFBitsTokenFromToken[W <: Int, VW <: Int](using
       check: Samurai.Check[W, VW]
-    ): TC[DFBits2[W], DFBits2[VW]] with {}
+    ): TC[DFBits2[W], DFBits2[VW]] with
+      type Out = Samurai.Check[W, VW]
