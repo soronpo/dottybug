@@ -1,4 +1,3 @@
-import scala.quoted.*
 trait Comp[A, B]
 trait Catch22:
   type Check[T1 <: Int, T2 <: Int] =
