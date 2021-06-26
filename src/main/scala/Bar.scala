@@ -1,29 +1,15 @@
 import scala.quoted.*
 trait Comp[A, B]
-given [A, B] : Comp[A, B] = new Comp[A, B]{}
-trait Check22[
-  Wide1,
-  Wide2,
-  Cond[T1 <: Wide1, T2 <: Wide2]
-]:
-  type Check[T1 <: Wide1, T2 <: Wide2] =
+trait Check22:
+  type Check[T1 <: Int, T2 <: Int] =
     Check22.Check[Comp[T1, T2]]
 
 object Check22:
-  trait Check[
-    CondValue 
-  ]
-  inline given [
-    CondValue 
-  ]: Check[CondValue] = new Check[CondValue]{}
+  trait Check[CondValue]
+  given [CondValue]: Check[CondValue] with {}
 end Check22
 
-object Samurai
-  extends Check22[
-    Int,
-    Int,
-    [W <: Int, VW <: Int] =>> W Comp VW,
-  ]
+object Samurai extends Check22
 
 trait DFType2
 opaque type DFBits2[W <: Int] <: DFType2 = DFType2
