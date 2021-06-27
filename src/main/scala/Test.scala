@@ -1,5 +1,5 @@
 import mylib.*
-import ImportWorks.*
+import Import.*
 object Test:
-  val oneFail : 1 = foo"1"
-  val oneWork : 1 = bar"1"
+  val oneFail : 1 = exported
+  val oneWork : 1 = imported
