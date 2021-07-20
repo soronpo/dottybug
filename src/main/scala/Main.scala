@@ -1,6 +1,6 @@
 opaque type Lie[W <: Int] = Int
 object Lie:
-  trait TC[-T <: Int]:
+  trait TC[-T]:
     type Out
   object TC:
     given [W <: Int]: TC[Lie[W]] with
