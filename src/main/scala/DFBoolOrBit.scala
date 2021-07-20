@@ -1,5 +1,7 @@
 import compiler.ir
-opaque type DFBoolOrBit <: DFType[ir.DFBoolOrBit] = DFType[ir.DFBoolOrBit]
+
+opaque type DFType[T <: ir.DFType] = T
+type DFBoolOrBit = DFType[ir.DFBoolOrBit]
 
 object DFBoolOrBit:
   def asBool(dfType: DFBoolOrBit): Unit = {}
