@@ -1,5 +1,3 @@
 import compiler.ir
 
-opaque type DFType = ir.DFType
-object DFType:
-  opaque type Of[T <: ir.DFType] <: DFType = T
+opaque type DFType[T <: ir.DFType] = T
