@@ -1,7 +1,7 @@
-
+package DFiant.core
+import DFiant.compiler.ir
 
 opaque type DFType = ir.DFType
-
 object DFType:
   opaque type Of[+T <: ir.DFType] <: DFType = T
   trait TC[T]:

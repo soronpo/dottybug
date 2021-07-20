@@ -1,3 +1,5 @@
+package DFiant.core
+import DFiant.compiler.ir
 opaque type DFBoolOrBit <: DFType.Of[ir.DFBoolOrBit] =
   DFType.Of[ir.DFBoolOrBit]
 
@@ -7,6 +9,6 @@ object DFBoolOrBit:
   end Ops
 end DFBoolOrBit
 
-import DFBoolOrBit.Ops.*
+export DFBoolOrBit.Ops.*
 
 final val DFBool = ir.DFBool.asInstanceOf[DFBoolOrBit]

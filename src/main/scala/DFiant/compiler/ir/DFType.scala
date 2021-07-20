@@ -1,3 +1,4 @@
+package DFiant.compiler
 package ir
 
 sealed trait DFType
