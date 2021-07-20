@@ -1,5 +1,3 @@
-package DFiant.core
-
 object compiler:
   object ir:
     sealed trait DFType

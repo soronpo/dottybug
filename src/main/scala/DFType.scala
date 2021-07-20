@@ -1,4 +1,3 @@
-package DFiant.core
 import compiler.ir
 
 opaque type DFType = ir.DFType
