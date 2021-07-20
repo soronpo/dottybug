@@ -1,5 +1,5 @@
 package DFiant.core
-import DFiant.compiler.ir
+import compiler.ir
 
 opaque type DFType = ir.DFType
 object DFType:
