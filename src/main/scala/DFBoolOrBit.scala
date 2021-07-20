@@ -4,6 +4,6 @@ opaque type DFBoolOrBit <: DFType.Of[ir.DFBoolOrBit] =
 
 object DFBoolOrBit:
   object Ops:
-    extension (dfVal: DFVal[DFBoolOrBit]) def asBool: Unit = {}
+    def asBool(dfVal: DFVal[DFBoolOrBit]): Unit = {}
 
 export DFBoolOrBit.Ops.*
