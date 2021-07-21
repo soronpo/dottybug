@@ -1,8 +1,5 @@
-opaque type DFBool <: DFType with HasToken =
-  DFType with HasToken
-
 trait HasToken
 
-extension (dfVal: DFVal[DFBool]) def bar: Unit = dfVal.as(DFBool)
+opaque type DFBool <: DFType with HasToken = DFType with HasToken
 
-final val DFBool: DFBool = ???
+def bar(v: DFVal): Unit = v.as[DFBool]

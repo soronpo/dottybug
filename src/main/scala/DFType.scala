@@ -1,14 +1,13 @@
 opaque type DFType = Int
+
 object DFType:
-  extension (dfType: Int) def asFE[T <: DFType]: T = dfType.asInstanceOf[T]
+  def foo: Unit = ???
 
-  trait TC[T]:
-    type Type <: DFType
-    def apply(t: T): Type
+  trait TC[T]
   object TC:
-    given ofDFType[T <: DFType]: TC[T] with
-      type Type = T
-      def apply(t: T): Type = t
-  end TC
+    given [T <: DFType]: TC[T] = ???
 
-export DFType.asFE
+export DFType.foo
+
+trait DFVal:
+  def as[A](using tc: DFType.TC[A], w: Width): Unit = ()
