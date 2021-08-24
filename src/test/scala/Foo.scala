@@ -1,2 +1,2 @@
-object Foo:
-  val fails = summon[Bar[2] =:= "2"]
+val shouldFail: LeakFoo[Any] = 1
+val shouldWork = summon[LeakFoo[Any] =:= core.Foo]
