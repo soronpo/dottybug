@@ -1,2 +1,3 @@
-val shouldFail: LeakFoo[Any] = 1
-val shouldWork = summon[LeakFoo[Any] =:= core.Foo]
+import scala.util.NotGiven
+
+val notok = summon[NotGiven[LeakFoo[1] =:= LeakFoo[2]]]

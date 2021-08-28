@@ -1,6 +1,5 @@
 package core
 
-opaque type Foo <: Int = Int
-type LeakFoo[M] = M match
-  case _ => Foo
+opaque type Foo[T] <: Int = Int
+type LeakFoo[T] = Foo[T]
 

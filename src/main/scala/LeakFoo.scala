@@ -1,3 +1,5 @@
-type LeakFoo[M] = core.LeakFoo[M]
+import scala.util.NotGiven
 
-val works = summon[LeakFoo[Any] =:= core.Foo]
+type LeakFoo[T] = core.LeakFoo[T]
+
+val ok = summon[NotGiven[LeakFoo[1] =:= LeakFoo[2]]]
