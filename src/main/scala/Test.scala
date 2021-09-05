@@ -1,4 +1,3 @@
 import mylib.*
 
-object Test:
-  haha()
+val x = d"x"
