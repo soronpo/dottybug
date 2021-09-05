@@ -1,5 +1,4 @@
-import mylib.Main
+import mylib.*
 
 object Test:
-  Main.fooCaller //works
-  Main.fooCallerM //error
+  haha()

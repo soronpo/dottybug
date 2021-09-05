@@ -1,9 +1,13 @@
 package mylib
 import scala.quoted.*
 
-object Main:
-  protected def foo: Unit = {}
-  inline def fooCaller: Unit = foo
-  inline def fooCallerM: Unit = ${ fooMacro }
-  def fooMacro(using Quotes): Expr[Unit] =
-    '{ foo }
+private object Main:
+  extension (inline sc: StringContext)
+    transparent inline def d(inline args: Any*): Unit =
+      ${
+      interpMacro
+      }
+  transparent inline def haha() : Unit = {}
+  def interpMacro(using Quotes) : Expr[Unit] =
+    import quotes.reflect.*
+    '{}
