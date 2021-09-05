@@ -1,3 +1,3 @@
 import mylib.*
 
-val x = d"x"
+val x = d()
