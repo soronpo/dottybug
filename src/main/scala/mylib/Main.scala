@@ -6,4 +6,5 @@ object Main:
   inline def fooCaller: Unit = foo
   inline def fooCallerM: Unit = ${ fooMacro }
   def fooMacro(using Quotes): Expr[Unit] =
-    '{ foo }
+    val fooExpr = '{ foo }
+    '{ $fooExpr }
