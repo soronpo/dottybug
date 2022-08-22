@@ -1,18 +1,18 @@
-package dfhdl
+object dfhdl:
 
-object core:
+  object core:
 
-  import scala.annotation.precise
+    import scala.annotation.precise
 
-  object DFType:
-    object Ops:
-      trait Floozy[V]
+    object DFType:
+      object Ops:
+        trait Floozy[V]
 
-      extension[T] (t: T) def tester[@precise V](tokenValue: V): Floozy[V] = ???
+        extension[T] (t: T) def tester[@precise V](tokenValue: V): Floozy[V] = ???
 
-object hdl:
-  export core.DFType.Ops.*
+  object hdl:
+    export core.DFType.Ops.*
 
-end hdl
+  end hdl
 
-export hdl.*
+  export hdl.*
