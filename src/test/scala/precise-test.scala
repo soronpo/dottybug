@@ -1,6 +1,6 @@
-import preciseLib.*
+import preciseLib.core.*
+import Ops.*
 
-class Box[T](x: T)
 trait ShowType[T]
 object ShowType:
   given [T]: ShowType[T] = ???
