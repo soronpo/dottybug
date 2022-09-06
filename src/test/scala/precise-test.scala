@@ -1,11 +1,9 @@
 import preciseLib.*
 
 class Box[T](x: T)
-trait ShowType[T]:
-  type Out <: String
+trait ShowType[T]
 object ShowType:
-  transparent inline given [T]: ShowType[T] = new ShowType[T]:
-    override type Out = "hi"
+  given [T]: ShowType[T] = ???
 
 object check:
 //  val v: DFVector[DFBool, Tuple1[4]] = ???
