@@ -27,8 +27,7 @@ object TC:
     type Type = DFBool
     def apply(t: Boolean.type): Type = ???
 
-object Ops:
-  extension [T, @precise D <: Int](t: T)(using tc: TC[T])
-    def XX(
-      cellDim: D
-    ): DFVector[tc.Type, Tuple1[D]] = ???
+extension [T, @precise D <: Int](t: T)(using tc: TC[T])
+  def XX(
+    cellDim: D
+  ): DFVector[tc.Type, Tuple1[D]] = ???
