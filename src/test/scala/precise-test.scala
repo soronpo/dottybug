@@ -1,4 +1,4 @@
-import preciseLib.core.*
+import preciseLib.*
 
 trait ShowType[T]
 object ShowType:
