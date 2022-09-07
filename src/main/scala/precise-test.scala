@@ -18,10 +18,5 @@ extension [T, @precise D <: Int](t: T)(using tc: TC[T])
     cellDim: D
   ): DFVector[tc.Type, Tuple1[D]] = ???
 
-trait ShowType[T]
-object ShowType:
-  given [T]: ShowType[T] = ???
-
 object check:
-  def box[A](a: A)(using ShowType[A]): Unit = ???
-  val b1 = box(Boolean XX 4)
+  val x: DFVector[DFVector[DFBool, Tuple1[4]], Tuple1[4]] = Boolean XX 4 XX 4
