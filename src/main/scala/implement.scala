@@ -9,10 +9,10 @@ object preciseLib:
   trait IRDFVector extends IRDFType
   trait IRDFBool extends IRDFType
   sealed trait DFError
-  final class DFType[+T <: IRDFType, +A <: Args](val value: T | DFError):
-    override def toString: String = value.toString
+  class DFType[+T <: IRDFType, +A <: Args]
   type DFTypeAny = DFType[IRDFType, Args]
-  type DFBool = DFType[IRDFBool, NoArgs]
+  object DFBool extends DFType[IRDFBool, NoArgs]
+  type DFBool = DFBool.type 
   type DFVector[+T <: DFTypeAny, +D <: NonEmptyTuple] =
     DFType[IRDFVector, Args2[T @uncheckedVariance, D @uncheckedVariance]]
 
