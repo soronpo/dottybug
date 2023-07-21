@@ -2,4 +2,4 @@
 
 ### Usage
 
-This is a normal sbt project. You can compile code with `sbt compile`, and get the reported failures.
+This is a normal sbt project. You can compile code with `sbt Test/compile`, and get the reported failures.
