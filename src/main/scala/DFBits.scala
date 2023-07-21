@@ -1,7 +1,7 @@
 trait DFBits[W <: Int]
 
-trait Candidate2[R]:
+trait Candidate[R]:
   type OutW <: Int
-object Candidate2:
-  given fromDFBits[W <: Int, R <: DFBits[W] <:> VAL]: Candidate2[R] with
+object Candidate:
+  given [W <: Int, R <: Foo[DFBits[W]]]: Candidate[R] with
     type OutW = W
