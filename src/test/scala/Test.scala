@@ -1,3 +1,4 @@
-type Of[T] <: DFTypeAny = T match
-  case DFTypeAny => T <:! DFTypeAny
+trait Foo
+type Of[T] <: Foo = T match
+  case Foo => T <:! Foo
 
