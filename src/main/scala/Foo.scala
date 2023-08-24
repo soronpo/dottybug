@@ -1,2 +1,5 @@
-type Foo[T] = T match
-  case Any => T
+trait VAL
+
+type Foo[T, M] = M match
+  case VAL => T
+
