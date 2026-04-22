@@ -1,9 +1,6 @@
-// Minimization from https://github.com/scala/scala3/issues/24537
-// (smaller reproduction posted by @SolalPirelli in the comments)
-//
-// Compiling this file causes the compiler to hang indefinitely
-// in a non-terminating type resolution loop.
-
+// Dependency-free minimization of https://github.com/scala/scala3/issues/24537.
+// Compiling this file causes the compiler to hang indefinitely in a
+// non-terminating TypeComparer loop.
 import io.github.iltotore.iron.*
 
 trait Path
@@ -14,11 +11,8 @@ final class A
 final class D
 type AD = D & A
 
-extension (p: Path)
-  def asD[F[_]]: F[Option[Path :| D]] = ???
-
-extension (p: Path :| D)
-  def ls[F[_]]: Stream[F, Path] = ???
+extension (p: Path) def asD[F[_]]: F[Option[Path :| D]] = ???
+extension (p: Path :| D) def ls[F[_]]: Stream[F, Path] = ???
 
 extension (p: Path :| AD)
   def lsDA[F[_]]: Stream[F, Path :| AD] = p.ls.evalMapFilter(_.asD)
