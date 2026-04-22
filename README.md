@@ -2,7 +2,9 @@
 
 ### Symptom
 
-Clean compile (`sbt clean compile`) succeeds. Touching `src/main/scala/MutableDB.scala` (any change that triggers an incremental recompile) then makes the next `sbt compile` fail with:
+**Windows-only** — tested and does not reproduce on WSL (Ubuntu).
+
+Clean compile (`sbt "clean; compile"`) succeeds. Touching `src/main/scala/MutableDB.scala` (any change that triggers an incremental recompile) then makes the next `sbt compile` fail with:
 
 ```
 [error] -- [E046] Cyclic Error: src/main/scala/stubs.scala:31:26
@@ -16,7 +18,7 @@ The `val <import>` referenced in the error is `import DFVal.Ops.CarryOp` at the 
 ### Reproduction
 
 ```bash
-sbt clean compile          # succeeds
+sbt "clean; compile"       # succeeds
 echo "// touch" >> src/main/scala/MutableDB.scala
 sbt compile                # fails with the cyclic error
 ```
