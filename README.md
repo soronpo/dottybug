@@ -23,7 +23,7 @@ echo "// touch" >> src/main/scala/MutableDB.scala
 sbt compile                # fails with the cyclic error
 ```
 
-Or run `bash repro.sh` which automates this and exits 0 on successful reproduction.
+Or run `repro.bat` which automates this and exits 0 on successful reproduction.
 
 ### Notes
 
