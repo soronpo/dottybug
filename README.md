@@ -4,7 +4,7 @@
 
 **Windows-only** — tested and does not reproduce on WSL (Ubuntu).
 
-Clean compile (`sbt "clean; compile"`) succeeds. Touching `src/main/scala/MutableDB.scala` (any change that triggers an incremental recompile) then makes the next `sbt compile` fail with:
+Clean compile (`sbtn "clean; compile"`) succeeds. Touching `src\main\scala\MutableDB.scala` (any change that triggers an incremental recompile) then makes the next `sbtn compile` fail with:
 
 ```
 [error] -- [E046] Cyclic Error: src/main/scala/stubs.scala:31:26
@@ -17,13 +17,17 @@ The `val <import>` referenced in the error is `import DFVal.Ops.CarryOp` at the 
 
 ### Reproduction
 
-```bash
-sbt "clean; compile"       # succeeds
-echo "// touch" >> src/main/scala/MutableDB.scala
-sbt compile                # fails with the cyclic error
+Run in **Windows cmd** from the project root:
+
+```bat
+sbtn "clean; compile"
+echo.>> src\main\scala\MutableDB.scala
+sbtn compile
 ```
 
-Or run `repro.bat` which automates this and exits 0 on successful reproduction.
+The first command succeeds; the third fails with the cyclic error. `sbtn` (the thin client) is required so the persistent sbt server state is preserved between invocations — plain `sbt` starts a fresh JVM each time and the bug does **not** reproduce.
+
+Or just run `repro.bat`, which automates the above and exits 0 on successful reproduction.
 
 ### Notes
 
