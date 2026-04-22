@@ -1,4 +1,4 @@
-val scala3Version = "3.0.0"
+val scala3Version = "3.8.0-RC3"
 
 lazy val root = project
   .in(file("."))
@@ -7,4 +7,12 @@ lazy val root = project
     version := "0.1.0",
 
     scalaVersion := scala3Version,
+    scalacOptions ++= Seq(
+      "-feature",
+      "-Werror",
+      "-deprecation",
+      "-nowarn",
+      "-language:implicitConversions",
+      "-source", "3.3"
+    )
  )
