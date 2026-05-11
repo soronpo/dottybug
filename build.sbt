@@ -1,7 +1,12 @@
-scalaVersion := "3.7.4"
+ThisBuild / scalaVersion := "3.7.4"
+
+lazy val lib = (project in file("lib"))
+  .settings(name := "cb-hammer-i26018-lib")
+
+lazy val test = (project in file("test"))
+  .dependsOn(lib)
+  .settings(name := "cb-hammer-i26018-test")
 
 lazy val root = (project in file("."))
-  .settings(
-    name := "cb-hammer-scala",
-    description := "Minimized repro for the lowmelvin/hammer-scala COMPILER failure"
-  )
+  .aggregate(lib, test)
+  .settings(name := "cb-hammer-i26018")

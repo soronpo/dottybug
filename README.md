@@ -1,67 +1,96 @@
-# Minimized repro: lowmelvin/hammer-scala (community-build3 2026-05-01)
+# Minimized repro: lowmelvin/hammer-scala (scala/scala3#26018)
 
-Standalone branch isolating the COMPILER failure of
-`lowmelvin/hammer-scala` reported on Scala
-`3.9.0-RC1-bin-20260501-0c8c581-NIGHTLY` (Scala 3 community-build3
-nightly, 2026-05-01).
+Two-file minimization of the
+[`scala/scala3#26018`](https://github.com/scala/scala3/issues/26018)
+regression originally surfaced by `lowmelvin/hammer-scala` in the Scala
+3 community-build3 nightly.
+
+The previous single-file repro pushed onto this branch failed on **every**
+3.x release including the last-known-good `3.6.4` — it didn't isolate
+the regression. This version was bisected against the actual project
+tests; it compiles cleanly under `3.6.4` and fails under `3.7.4` (and
+later, including the latest nightly), with the same `[E172] auto.given_X
+does not match` shape that `community-build3` reports.
 
 ## Reproduce
 
 ```
-sbt compile
+sbt 'test/compile'
 ```
 
-Pinned to `3.7.4` because that's the earliest stable that already
-exhibits the bug — no nightly required.
+Pinned to `3.7.4` because that's the earliest stable that exhibits the
+bug — no nightly toolchain required.
+
+The build is split into two subprojects on purpose: the bug only
+manifests when `Test.scala` is compiled against `Lib.scala`'s **TASTy**,
+not when both files are compiled in the same invocation. Putting all
+sources under a single project / single source dir hides the regression.
+
+## Bisection (vs `3.6.4`)
+
+| Compiler           | `lib` compile | `test` compile |
+|--------------------|---------------|----------------|
+| `3.6.4`            | OK (warnings) | OK             |
+| `3.7.0` … `3.7.4`  | OK (warnings) | E172           |
+| `3.8.x`            | OK (warnings) | E172           |
+| `3.9.0-NIGHTLY`    | OK (warnings) | E172           |
+
+Symptom on 3.7.4+:
+
+```
+-- [E172] Type Error: test/src/main/scala/Test.scala:14:30 --
+   No given instance of type mh.Hammer[usage.A, usage.B] was found.
+   I found:
+       mh.derived[usage.A, usage.B](
+         usage.A.$asInstanceOf[ Mirror.Product{… "A" …} ],
+         usage.B.$asInstanceOf[ Mirror.Product{… "B" …} ]
+       )
+   But given instance derived in package mh does not match
+   type mh.Hammer[usage.A, usage.B].
+```
+
+The diagnostic is internally inconsistent: `derived[A, B]` instantiated
+with `Mirror.ProductOf[A]` and `Mirror.ProductOf[B]` *does* have type
+`Hammer[A, B]`, yet the typer rejects it. The mismatch arises during
+inline expansion of `summonInline[Hammer[t, O]]` inside the recursive
+auto-derivation chain.
+
+## Trigger ingredients
+
+Each of the following is necessary to reproduce — removing or rewriting
+any one of them makes the bug disappear:
+
+1. The recursive `summonInline[Hammer[t, O]]` inside an `inline def`
+   driven by an `inline match erasedValue[Ts]` over a tuple type.
+2. The `lazy val (h, idx) = summonFirst[…]` **destructured `lazy val`**
+   inside the inline-emitted anonymous class body. Replacing it with
+   `val (h, idx)`, `lazy val tup` + `lazy val h = tup._1`, or
+   collapsing the tuple to a single value, all suppress the bug.
+3. `h.hammer(source.asInstanceOf)` — the **untyped `asInstanceOf`** on
+   the `lazy val h` reference. Annotating the cast (`.asInstanceOf[Nothing]`)
+   or eliminating the use of `h` altogether also suppresses it.
+4. The `inline given derived[I: Mirror.ProductOf, O: Mirror.ProductOf]`
+   recursion, with at least one identity-given (`given identity[I]:
+   Hammer[I, I]`) in scope as an alternative.
+5. **Separate compilation** of `Lib` and `Test`. Single-unit
+   compilation does not trigger.
 
 ## Source
 
-`src/main/scala/Repro.scala` (45 LoC; ~18 LoC of meaningful code).
+* `lib/src/main/scala/Lib.scala` — 60 LoC; the auto-derivation library.
+* `test/src/main/scala/Test.scala` — 13 LoC; four nested case classes
+  + a `summon[Hammer[C, D]]`.
 
-## Symptom
+## Background
 
-```
--- [E172] Type Error: Repro.scala:45:44 --
-   No given instance of type Hammer[D, given_HasT.T] was found.
-   I found:
-       Lib.derived[D, B](given_HasT)
-   But given instance derived in object Lib does not match
-   type Hammer[D, given_HasT.T].
-```
+Original community-build3 failure (test that triggered this):
 
-Dealiasing `given_HasT.T = B` (per the `given HasT with { type T = B }`
-in scope), the candidate `Lib.derived[D, B]` *does* have the required
-type `Hammer[D, B]` = `Hammer[D, given_HasT.T]`. The compiler
-nonetheless rejects it.
+> `src/test/scala/com/melvinlow/hammer/HammerSpec.scala:27`
+> ("should hammer nested fields")
 
-## Bisection notes
-
-Two separate observations made while reducing this:
-
-1. **Unminimized hammer-scala** (the actual community-build3 source —
-   `src/test/scala/com/melvinlow/hammer/HammerSpec.scala`) compiled
-   on a sbt project against:
-   - 3.6.4 → **passes** (matches the last-good run on community-build3).
-   - 3.7.4 → **fails** with the same error shape.
-   So at the unreduced level, the regression entered between 3.6.4
-   and 3.7.x.
-2. **This minimized repro** reproduces the same error shape against
-   3.6.4, 3.7.4, and 3.9.0-RC1-bin-SNAPSHOT. So this minimization is
-   *broader* than the precise community-build3 regression and likely
-   surfaces a long-standing limitation. The unreduced project hides it
-   on 3.6.4 via an extra layer of `summonFrom` + a quoted-macro step.
-
-## Original failure
-
-- Job:
-  https://github.com/VirtusLab/community-build3/actions/runs/25237182777/job/74005935133
-- Source line:
-  https://github.com/lowmelvin/hammer-scala/blob/master/src/test/scala/com/melvinlow/hammer/HammerSpec.scala#L27
-
-## Adjacent prior bugs (closed; similar signature)
-
-- scala/scala3#25417 / scala/scala3#25427 — same "I found … but does
-  not match" shape on **opaque-type** givens. Closed by PR #25448.
-  The fix did not cover this **type-member**-on-trait case.
-- scala/scala3#22585 — earlier hammer-scala regression on 3.6.4
-  (different root cause: `lazy val` inside an inline body).
+The previous closed regression
+[`scala/scala3#22585`](https://github.com/scala/scala3/issues/22585) on
+the same project had a different shape (`Found: ?1.I, Required: Nothing`,
+fixed by PR #23438). The current shape, `auto.given_X does not match`
+with a contradictory hint to import the same given via its `internal`
+name, is a distinct issue.
