@@ -1,17 +1,9 @@
 package dfhdl
 
-final class DFVal[+T <: DFType, +M]
-
-type DFValAny = DFVal[DFType, ModifierAny]
-type DFConstOf[+T <: DFType] = DFVal[T, Modifier.CONST]
-type DFValTP[+T <: DFType] = DFVal[T, Modifier]
-
-inline def x = ${ ??? }
-
+// Compiled in stage 1 and then left untouched, so in stage 2 it is loaded
+// from TASTy. Its `export` re-exports a given that is actually *defined* in a
+// different file (DFXInt.Ops in stubs.scala) which is being recompiled.
 object DFVal:
-  export DFXInt.Ops.{c1, c2}
+  export DFXInt.Ops.c1
   object Ops:
-    type BoolOnlyOp
     type CarryOp
-
-

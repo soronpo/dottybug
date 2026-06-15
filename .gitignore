@@ -6,3 +6,6 @@ project/project/
 .bloop/
 .idea/
 .vscode/
+out1/
+out2/
+compiler.cp
